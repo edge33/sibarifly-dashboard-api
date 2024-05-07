@@ -11,7 +11,7 @@ app.get('/', function (_, reply: FastifyReply) {
   return reply
     .code(200)
     .header('Content-Type', 'application/json; charset=utf-8')
-    .send({ hello: 'world' });
+    .send({ hello: 'Hello with cors' });
 });
 
 app.listen({ port: Number(process.env.PORT) || 8000, host: '0.0.0.0' }, (err) => {
