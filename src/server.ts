@@ -1,12 +1,11 @@
 import fastify, { FastifyReply } from 'fastify';
-// import cors from '@fastify/cors';
-
+import cors from '@fastify/cors';
 const app = fastify({ logger: true });
 
-// await app.register(cors, {
-//   origin: '*',
-//   methods: ['POST', 'GET']
-// });
+await app.register(cors, {
+  origin: '*',
+  methods: ['POST', 'GET']
+});
 
 app.get('/', function (_, reply: FastifyReply) {
   return reply
