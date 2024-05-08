@@ -18,3 +18,5 @@
     - 'europe-west8'
   images:
   - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA'
+  options:
+    logging: CLOUD_LOGGING_ONLY
