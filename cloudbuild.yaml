@@ -1,3 +1,5 @@
+  options:
+    logging: CLOUD_LOGGING_ONLY
   steps:
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
@@ -18,5 +20,4 @@
     - 'europe-west8'
   images:
   - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA'
-  options:
-    logging: CLOUD_LOGGING_ONLY
+
