@@ -13,7 +13,7 @@
     args:
     - 'run'
     - 'deploy'
-    - 'sibarifly-dashboard-api'
+    - 'sibarifly-dashboard-api-$BRANCH_NAME'
     - '--image'
     - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA'
     - '--region'
