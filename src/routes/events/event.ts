@@ -1,0 +1,34 @@
+import { FastifyInstance } from 'fastify';
+import { HttpError, LandingEvent } from '../../types/index.js';
+import { Type } from '@sinclair/typebox';
+
+export default async (app: FastifyInstance) => {
+  app.get<{ Params: { eventId: string } }>(
+    '/:eventId',
+    {
+      schema: {
+        tags: ['Events'],
+        params: { eventId: Type.String() },
+        response: {
+          200: LandingEvent,
+          404: HttpError
+        }
+      }
+    },
+    async (request, reply) => {
+      const { eventId } = request.params;
+      let data;
+      try {
+        data = await app.prisma.event.findUnique({ where: { id: eventId } });
+      } catch (error) {
+        app.log.error(error);
+      }
+      if (!data) {
+        return reply.callNotFound();
+      }
+      return reply.send(data);
+    }
+  );
+
+  return app;
+};

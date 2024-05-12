@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.recommended,
   {
     languageOptions: {
       parserOptions: {
@@ -15,7 +15,8 @@ export default tseslint.config(
     }
   },
   eslintConfigPrettier,
+  { rules: { 'prefer-template': 'error' } },
   {
-    ignores: ['*.config*', 'dist']
+    ignores: ['*.config*', 'dist', 'node_modules']
   }
 );
