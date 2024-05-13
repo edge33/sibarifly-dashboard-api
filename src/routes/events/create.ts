@@ -32,25 +32,28 @@ export default async (app: FastifyInstance) => {
         arrivalTime,
         departureTime
       } = request.body;
-      console.log(date);
 
-      const result = await app.prisma.event.create({
-        data: {
-          date: new Date(date),
-          registration,
-          model,
-          pilotInCommand,
-          paxNumber,
-          arrivalTime,
-          departure,
-          departureTime,
-          destination,
-          firstOfficer: firstOfficer || ''
-        }
-      });
-      reply.header('location', `/events/${result.id}`);
-
-      return reply.status(201).send();
+      try {
+        const result = await app.prisma.event.create({
+          data: {
+            date: new Date(date),
+            registration,
+            model,
+            pilotInCommand,
+            paxNumber,
+            arrivalTime,
+            departure,
+            departureTime,
+            destination,
+            firstOfficer: firstOfficer || ''
+          }
+        });
+        reply.header('location', `/events/${result.id}`);
+        return reply.status(201).send();
+      } catch (error) {
+        app.log.error(error);
+        throw new Error('Internal server error');
+      }
     }
   );
 
