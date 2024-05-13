@@ -5,7 +5,16 @@ import { envSchema } from '../config.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    config: { DATABASE_URL: string; ENVIRONMENT: 'development' | 'production' };
+    config: {
+      DATABASE_URL: string;
+      ENVIRONMENT: 'development' | 'production';
+      JWT_AUTH_TOKEN_SECRET: string;
+      JWT_AUTH_TOKEN_EXPIRES_IN: string;
+      JWT_REFRESH_TOKEN_SECRET: string;
+      JWT_REFRESH_TOKEN_EXPIRES_IN: string;
+      DOMAIN: string;
+      ADMIN_PASSWORD: string;
+    };
   }
 }
 

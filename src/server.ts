@@ -1,11 +1,14 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import cookies from '@fastify/cookie';
 
 import routes from './routes/index.js';
 import prismaPlugin from './plugins/prismaPlugin.js';
 import fastifyEnvPlugin from './plugins/fastifyEnvPlugin.js';
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { HttpErrorType } from './types/index.js';
+import authPlugin from './plugins/AuthPlugin.js';
+import JWTPlugin from './plugins/JWTPlugin.js';
 
 const envToLogger = {
   development: {
@@ -53,18 +56,21 @@ app.setErrorHandler((error, request, reply) => {
   reply.status(500).send(externalError);
 });
 
+/** plugins */
+app.register(cookies);
 app.register(cors, {
   origin: '*',
   methods: ['POST', 'GET']
 });
-
 await app.register(fastifyEnvPlugin);
-
 if (app.config.ENVIRONMENT === 'development') {
   app.register(import('./plugins/fastifySwaggerPlugin.js'));
 }
 app.register(prismaPlugin);
+app.register(JWTPlugin);
+app.register(authPlugin);
 
+/** routes */
 app.register(routes);
 
 app.listen({ port: Number(process.env.PORT) || 8000, host: '0.0.0.0' }, (err) => {

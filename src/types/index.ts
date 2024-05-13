@@ -25,3 +25,10 @@ export const HttpError = Type.Object({
 });
 
 export type HttpErrorType = Static<typeof HttpError>;
+
+export const LoginCredentials = Type.Object({
+  username: Type.String(),
+  password: Type.String()
+});
+
+export type LoginCredentialsType = Static<typeof LoginCredentials>;

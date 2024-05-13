@@ -22,6 +22,7 @@ export default async (app: FastifyInstance) => {
         data = await app.prisma.event.findUnique({ where: { id: eventId } });
       } catch (error) {
         app.log.error(error);
+        throw new Error('Internal server error');
       }
       if (!data) {
         return reply.callNotFound();
