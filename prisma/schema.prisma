@@ -20,7 +20,7 @@ model Event {
   registration   String
   model          String
   pilotInCommand String
-  firstOfficer   String
+  firstOfficer   String?
   paxNumber      Int
   departure      String
   destination    String

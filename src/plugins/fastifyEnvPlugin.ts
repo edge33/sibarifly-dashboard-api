@@ -14,8 +14,6 @@ declare module 'fastify' {
       JWT_REFRESH_TOKEN_EXPIRES_IN: string;
       DOMAIN: string;
       ADMIN_PASSWORD: string;
-      GOOGLE_CLOUD_PROJECT_ID: string;
-      DATABASE_ID: string;
     };
   }
 }
