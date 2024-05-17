@@ -48,6 +48,7 @@ export default async (app: FastifyInstance) => {
             firstOfficer: firstOfficer || ''
           }
         });
+
         reply.header('location', `/events/${result.id}`);
         return reply.status(201).send();
       } catch (error) {

@@ -66,6 +66,7 @@ await app.register(fastifyEnvPlugin);
 if (app.config.ENVIRONMENT === 'development') {
   app.register(import('./plugins/fastifySwaggerPlugin.js'));
 }
+
 app.register(prismaPlugin);
 app.register(JWTPlugin);
 app.register(authPlugin);

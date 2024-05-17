@@ -7,6 +7,16 @@
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA']
+  # Run database migrations
+  - name: 'gcr.io/cloud-builders/npm'
+    entrypoint: npx
+    env:
+     - DIRECT_URL=$_DIRECT_URL
+     - DATABASE_URL=$_DATABASE_URL
+    args:
+      - 'prisma'
+      - 'migrate'
+      - 'deploy'
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
