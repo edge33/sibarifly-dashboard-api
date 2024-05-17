@@ -3,7 +3,7 @@ import { HttpError, LandingEvent } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
 
 export default async (app: FastifyInstance) => {
-  app.get<{ Params: { eventId: string } }>(
+  app.get<{ Params: { eventId: number } }>(
     '/:eventId',
     {
       schema: {
