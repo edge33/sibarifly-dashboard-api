@@ -49,21 +49,6 @@ export default async (app: FastifyInstance) => {
           }
         });
 
-        const newEvent = app.db.collection('events').doc();
-
-        await newEvent.set({
-          date: new Date(date),
-          registration,
-          model,
-          pilotInCommand,
-          paxNumber,
-          arrivalTime,
-          departure,
-          departureTime,
-          destination,
-          firstOfficer: firstOfficer || ''
-        });
-
         reply.header('location', `/events/${result.id}`);
         return reply.status(201).send();
       } catch (error) {

@@ -9,7 +9,6 @@ import fastifyEnvPlugin from './plugins/fastifyEnvPlugin.js';
 import { HttpErrorType } from './types/index.js';
 import authPlugin from './plugins/AuthPlugin.js';
 import JWTPlugin from './plugins/JWTPlugin.js';
-import firestorePlugin from './plugins/fireStorePlugin.js';
 
 const envToLogger = {
   development: {
@@ -68,7 +67,6 @@ if (app.config.ENVIRONMENT === 'development') {
   app.register(import('./plugins/fastifySwaggerPlugin.js'));
 }
 
-app.register(firestorePlugin);
 app.register(prismaPlugin);
 app.register(JWTPlugin);
 app.register(authPlugin);

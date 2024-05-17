@@ -8,7 +8,7 @@ export default async (app: FastifyInstance) => {
     {
       schema: {
         tags: ['Events'],
-        params: { eventId: Type.String() },
+        params: { eventId: Type.Number() },
         response: {
           200: LandingEvent,
           404: HttpError
