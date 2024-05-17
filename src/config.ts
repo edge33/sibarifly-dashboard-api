@@ -8,9 +8,7 @@ export const envSchema = {
     'JWT_REFRESH_TOKEN_SECRET',
     'JWT_REFRESH_TOKEN_EXPIRES_IN',
     'DOMAIN',
-    'ADMIN_PASSWORD',
-    'GOOGLE_CLOUD_PROJECT_ID',
-    'DATABASE_ID'
+    'ADMIN_PASSWORD'
   ],
   properties: {
     DATABASE_URL: {
@@ -28,8 +26,6 @@ export const envSchema = {
     },
     JWT_REFRESH_TOKEN_EXPIRES_IN: { type: 'string' },
     DOMAIN: { type: 'string' },
-    ADMIN_PASSWORD: { type: 'string' },
-    GOOGLE_CLOUD_PROJECT_ID: { type: 'string' },
-    DATABASE_ID: { type: 'string' }
+    ADMIN_PASSWORD: { type: 'string' }
   }
 };
