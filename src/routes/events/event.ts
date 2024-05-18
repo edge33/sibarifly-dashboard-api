@@ -3,6 +3,10 @@ import { HttpError, LandingEvent } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
 
 export default async (app: FastifyInstance) => {
+  app.addHook('preHandler', async (request, reply) => {
+    app.verifyJWT(request, reply);
+  });
+
   app.get<{ Params: { eventId: number } }>(
     '/:eventId',
     {
