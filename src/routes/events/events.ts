@@ -4,7 +4,6 @@ import { Type } from '@sinclair/typebox';
 
 export default async (app: FastifyInstance) => {
   app.addHook('preHandler', async (request, reply) => {
-    app.log.info('preHandler hook');
     app.verifyJWT(request, reply);
   });
 

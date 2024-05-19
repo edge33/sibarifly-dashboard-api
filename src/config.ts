@@ -15,7 +15,7 @@ export const envSchema = {
       type: 'string'
     },
     ENVIRONMENT: {
-      enum: ['development', 'production']
+      enum: ['development', 'production', 'test']
     },
     JWT_AUTH_TOKEN_SECRET: {
       type: 'string'

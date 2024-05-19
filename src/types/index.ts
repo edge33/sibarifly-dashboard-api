@@ -1,7 +1,7 @@
 import { Static, Type } from '@sinclair/typebox';
 
 export const LandingEvent = Type.Object({
-  id: Type.Optional(Type.String()),
+  id: Type.Optional(Type.Number()),
   date: Type.String(),
   registration: Type.String(),
   model: Type.String(),
