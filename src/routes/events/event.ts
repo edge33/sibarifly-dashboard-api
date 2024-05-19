@@ -21,6 +21,7 @@ export default async (app: FastifyInstance) => {
     },
     async (request, reply) => {
       const { eventId } = request.params;
+
       let data;
       try {
         data = await app.prisma.event.findUnique({ where: { id: eventId } });
