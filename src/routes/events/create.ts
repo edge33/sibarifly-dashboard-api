@@ -1,14 +1,14 @@
 import { FastifyInstance } from 'fastify';
-import { HttpError, LandingEvent, type LandingEventType } from '../../types/index.js';
+import { HttpError, Event, type EventType } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
 
 export default async (app: FastifyInstance) => {
-  app.post<{ Body: LandingEventType }>(
+  app.post<{ Body: EventType }>(
     '/',
     {
       schema: {
         tags: ['Events'],
-        body: LandingEvent,
+        body: Event,
         response: {
           '201': {
             Headers: {
@@ -21,31 +21,35 @@ export default async (app: FastifyInstance) => {
     },
     async (request, reply) => {
       const {
-        date,
-        registration,
-        model,
-        pilotInCommand,
-        firstOfficer,
-        paxNumber,
+        dateTime,
+        aircraftModel,
+        aircraftRegistration,
+        aircraftType,
         departure,
         destination,
-        arrivalTime,
-        departureTime
+        emailAddress,
+        eventType,
+        mobilePhone,
+        paxNumber,
+        pilotInCommand,
+        firstOfficer
       } = request.body;
 
       try {
         const result = await app.prisma.event.create({
           data: {
-            date: new Date(date),
-            registration,
-            model,
+            dateTime: new Date(dateTime),
+            eventType,
+            aircraftType,
+            aircraftRegistration,
+            aircraftModel,
             pilotInCommand,
+            firstOfficer,
             paxNumber,
-            arrivalTime,
             departure,
-            departureTime,
             destination,
-            firstOfficer
+            emailAddress,
+            mobilePhone
           }
         });
         reply.header('location', `/events/${result.id}`);

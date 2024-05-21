@@ -15,16 +15,17 @@ tap.test('event', async (t) => {
           if (query.where.id === 1) {
             return Promise.resolve({
               id: 1,
-              date: '2024-01-01',
-              registration: 'registration',
-              model: 'model',
+              eventType: 'DEPARTURE',
+              dateTime: '2024-01-01',
+              aircraftRegistration: 'registration',
+              aircraftModel: 'model',
+              aircraftType: 'GA',
               pilotInCommand: 'pilotInCommand',
               firstOfficer: 'firstOfficer',
               paxNumber: 0,
               departure: 'departure',
               destination: 'destination',
-              arrivalTime: '10:01',
-              departureTime: '11:01'
+              emailAddress: 'mail@mail.com'
             });
           }
           if (query.where.id === 2) {
@@ -46,16 +47,17 @@ tap.test('event', async (t) => {
 
     assert.deepEqual(response.json(), {
       id: 1,
-      date: '2024-01-01',
-      registration: 'registration',
-      model: 'model',
+      eventType: 'DEPARTURE',
+      dateTime: '2024-01-01',
+      aircraftRegistration: 'registration',
+      aircraftModel: 'model',
+      aircraftType: 'GA',
       pilotInCommand: 'pilotInCommand',
       firstOfficer: 'firstOfficer',
       paxNumber: 0,
       departure: 'departure',
       destination: 'destination',
-      arrivalTime: '10:01',
-      departureTime: '11:01'
+      emailAddress: 'mail@mail.com'
     });
     t.equal(response.statusCode, 200);
   });
