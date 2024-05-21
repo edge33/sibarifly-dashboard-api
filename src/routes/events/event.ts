@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { HttpError, LandingEvent } from '../../types/index.js';
+import { HttpError, Event } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
 
 export default async (app: FastifyInstance) => {
@@ -14,7 +14,7 @@ export default async (app: FastifyInstance) => {
         tags: ['Events'],
         params: { eventId: Type.Number() },
         response: {
-          200: LandingEvent,
+          200: Event,
           404: HttpError
         }
       }

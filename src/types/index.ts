@@ -1,20 +1,22 @@
 import { Static, Type } from '@sinclair/typebox';
 
-export const LandingEvent = Type.Object({
+export const Event = Type.Object({
   id: Type.Optional(Type.Number()),
-  date: Type.String(),
-  registration: Type.String(),
-  model: Type.String(),
+  dateTime: Type.String(),
+  eventType: Type.Union([Type.Literal('ARRIVAL'), Type.Literal('DEPARTURE')]),
+  aircraftType: Type.Union([Type.Literal('GA'), Type.Literal('ULV')]),
+  aircraftRegistration: Type.String(),
+  aircraftModel: Type.String(),
   pilotInCommand: Type.String(),
   firstOfficer: Type.Optional(Type.String()),
   paxNumber: Type.Number({ default: 0 }),
   departure: Type.String(),
   destination: Type.String(),
-  arrivalTime: Type.String(),
-  departureTime: Type.String()
+  mobilePhone: Type.Optional(Type.String()),
+  emailAddress: Type.Optional(Type.String())
 });
 
-export type LandingEventType = Static<typeof LandingEvent>;
+export type EventType = Static<typeof Event>;
 
 export const HttpError = Type.Object({
   statusCode: Type.Number(),

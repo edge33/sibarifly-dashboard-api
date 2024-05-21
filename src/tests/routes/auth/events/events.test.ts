@@ -7,29 +7,29 @@ import events from '../../../../routes/events/events.js';
 const payload = [
   {
     id: 1,
-    date: '2024-01-01',
-    registration: 'registration',
-    model: 'model',
+    dateTime: '2024-01-01',
+    eventType: 'ARRIVAL',
+    aircraftType: 'GA',
+    aircraftRegistration: 'aircraft',
+    aircraftModel: 'model',
     pilotInCommand: 'pilotInCommand',
     firstOfficer: 'firstOfficer',
     paxNumber: 0,
     departure: 'departure',
-    destination: 'destination',
-    arrivalTime: '10:01',
-    departureTime: '11:01'
+    destination: 'destination'
   },
   {
     id: 2,
-    date: '2024-01-01',
-    registration: 'registration',
-    model: 'model',
+    dateTime: '2024-01-01',
+    eventType: 'DEPARTURE',
+    aircraftType: 'ULV',
+    aircraftRegistration: 'registration',
+    aircraftModel: 'aircraft',
     pilotInCommand: 'pilotInCommand',
     firstOfficer: 'firstOfficer',
     paxNumber: 0,
     departure: 'departure',
-    destination: 'destination',
-    arrivalTime: '10:01',
-    departureTime: '11:01'
+    destination: 'destination'
   }
 ];
 

@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import { LandingEvent } from '../../types/index.js';
+import { Event } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
 
 export default async (app: FastifyInstance) => {
@@ -13,7 +13,7 @@ export default async (app: FastifyInstance) => {
       schema: {
         tags: ['Events'],
         response: {
-          200: Type.Array(LandingEvent)
+          200: Type.Array(Event)
         }
       }
     },

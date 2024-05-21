@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client/extension';
 
 tap.test('create', async (t) => {
   let app: FastifyInstance;
-  const capturedCreate = t.captureFn(() => Promise.resolve({ result: { id: 1 } }));
+  const capturedCreate = t.captureFn((args: []) => Promise.resolve({ result: { id: 1 } }));
   t.beforeEach(async () => {
     app = fastify();
     const prisma: PrismaClient = {
@@ -18,16 +18,18 @@ tap.test('create', async (t) => {
 
   t.test('should create an event', async (t) => {
     const payload = {
-      date: '2024-01-01',
-      registration: 'registration',
-      model: 'model',
+      dateTime: '2024-01-01',
+      eventType: 'ARRIVAL',
+      aircraftType: 'GA',
+      aircraftRegistration: 'registration',
+      aircraftModel: 'model',
       pilotInCommand: 'pilotInCommand',
       firstOfficer: 'firstOfficer',
-      paxNumber: 1,
       departure: 'departure',
+      paxNumber: 1,
       destination: 'destination',
-      arrivalTime: 'arrivalTime',
-      departureTime: 'departureTime'
+      emailAddress: '',
+      mobilePhone: '98787978'
     };
 
     const response = await app.inject({
@@ -37,11 +39,10 @@ tap.test('create', async (t) => {
       payload
     });
 
-    assert.deepEqual(capturedCreate.calls[0].args, [
-      {
-        data: { ...payload, date: new Date(payload.date) }
-      }
-    ]);
+    const args = capturedCreate.calls[0].args[0];
+    assert.deepEqual(args, {
+      data: { ...payload, dateTime: new Date(payload.dateTime) }
+    });
 
     t.equal(response.statusCode, 201);
   });
@@ -57,16 +58,17 @@ tap.test('create', async (t) => {
     app.decorate('prisma', prisma);
 
     const payload = {
-      date: '2024-01-01',
-      registration: 'registration',
-      model: 'model',
+      dateTime: '2024-01-01T00:00:00.000Z',
+      eventType: 'ARRIVAL',
+      aircraftType: 'GA',
+      aircraftRegistration: 'registration',
+      aircraftModel: 'model',
       pilotInCommand: 'pilotInCommand',
       firstOfficer: 'firstOfficer',
       paxNumber: 1,
       departure: 'departure',
       destination: 'destination',
-      arrivalTime: 'arrivalTime',
-      departureTime: 'departureTime'
+      mobilePhone: '98787978'
     };
 
     const response = await app.inject({

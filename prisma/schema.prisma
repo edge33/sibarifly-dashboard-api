@@ -15,15 +15,24 @@ datasource db {
 }
 
 model Event {
-  id             Int      @id @default(autoincrement())
-  date           DateTime
-  registration   String
-  model          String
-  pilotInCommand String
-  firstOfficer   String?
-  paxNumber      Int
-  departure      String
-  destination    String
-  arrivalTime    String
-  departureTime  String
+  id Int @id @default(autoincrement())
+
+  dateTime             DateTime?
+  eventType            String?
+  aircraftType         String?
+  aircraftRegistration String?
+  aircraftModel        String?
+  departure            String
+  destination          String
+  paxNumber            Int
+  firstOfficer         String?
+  pilotInCommand       String?
+  emailAddress         String?
+  mobilePhone          String?
+
+  registration  String?
+  date          DateTime?
+  model         String?
+  arrivalTime   String?
+  departureTime String?
 }
