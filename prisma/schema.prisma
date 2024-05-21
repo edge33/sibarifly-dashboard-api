@@ -14,25 +14,28 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Event {
-  id Int @id @default(autoincrement())
+enum EventType {
+  DEPARTURE
+  ARRIVAL
+}
 
+enum AircraftType {
+  ULV
+  GA
+}
+
+model Event {
+  id                   Int          @id @default(autoincrement())
   dateTime             DateTime?
-  eventType            String?
-  aircraftType         String?
-  aircraftRegistration String?
-  aircraftModel        String?
+  eventType            EventType    @default(ARRIVAL)
+  aircraftType         AircraftType @default(GA)
+  aircraftRegistration String
+  aircraftModel        String
   departure            String
   destination          String
   paxNumber            Int
   firstOfficer         String?
-  pilotInCommand       String?
+  pilotInCommand       String
   emailAddress         String?
   mobilePhone          String?
-
-  registration  String?
-  date          DateTime?
-  model         String?
-  arrivalTime   String?
-  departureTime String?
 }
