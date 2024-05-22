@@ -20,7 +20,7 @@ enum EventType {
 }
 
 enum AircraftType {
-  ULV
+  ULM
   GA
 }
 

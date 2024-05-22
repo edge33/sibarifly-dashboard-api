@@ -22,7 +22,7 @@ const payload = [
     id: 2,
     dateTime: '2024-01-01',
     eventType: 'DEPARTURE',
-    aircraftType: 'ULV',
+    aircraftType: 'ULM',
     aircraftRegistration: 'registration',
     aircraftModel: 'aircraft',
     pilotInCommand: 'pilotInCommand',

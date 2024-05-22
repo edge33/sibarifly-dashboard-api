@@ -4,7 +4,7 @@ export const Event = Type.Object({
   id: Type.Optional(Type.Number()),
   dateTime: Type.String(),
   eventType: Type.Union([Type.Literal('ARRIVAL'), Type.Literal('DEPARTURE')]),
-  aircraftType: Type.Union([Type.Literal('GA'), Type.Literal('ULV')]),
+  aircraftType: Type.Union([Type.Literal('GA'), Type.Literal('ULM')]),
   aircraftRegistration: Type.String(),
   aircraftModel: Type.String(),
   pilotInCommand: Type.String(),
