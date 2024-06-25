@@ -68,7 +68,7 @@ const buildApp = async () => {
     app.register(import('./plugins/fastifySwaggerPlugin.js'));
   }
 
-  await app.register(prismaPlugin);
+  app.register(prismaPlugin);
   app.register(JWTPlugin);
   app.register(authPlugin);
 

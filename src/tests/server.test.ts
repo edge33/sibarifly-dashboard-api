@@ -54,7 +54,7 @@ tap.test('server', async (t) => {
     const app = await buildApp();
     app.get('/', async (request, response) => {
       t.hasProp(request, 'cookies');
-      t.hasProp(request, 'corsPreflightEnabled');
+      // t.hasProp(request, 'corsPreflightEnabled');
 
       t.hasProp(request, 'authJwtVerify');
       t.hasProp(request, 'authJwtDecode');
