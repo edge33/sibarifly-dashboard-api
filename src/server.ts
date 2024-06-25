@@ -1,5 +1,5 @@
 import fastify from 'fastify';
-import cors from '@fastify/cors';
+// import cors from '@fastify/cors';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import cookies from '@fastify/cookie';
 
@@ -59,16 +59,16 @@ const buildApp = async () => {
 
   /** plugins */
   app.register(cookies);
-  app.register(cors, {
-    origin: '*',
-    methods: ['POST', 'GET']
-  });
+  // app.register(cors, {
+  //   origin: '*',
+  //   methods: ['POST', 'GET']
+  // });
   await app.register(fastifyEnvPlugin);
   if (app.config.ENVIRONMENT === 'development') {
     app.register(import('./plugins/fastifySwaggerPlugin.js'));
   }
 
-  app.register(prismaPlugin);
+  await app.register(prismaPlugin);
   app.register(JWTPlugin);
   app.register(authPlugin);
 
