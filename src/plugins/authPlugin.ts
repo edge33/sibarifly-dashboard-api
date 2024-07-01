@@ -12,7 +12,7 @@ const authPlugin: FastifyPluginAsync = fp(async (server) => {
     try {
       await request.authJwtVerify();
     } catch (err) {
-      server.log.error(err);
+      // server.log.error(err);
       reply.status(401).send('Unauthorized');
     }
   });

@@ -21,11 +21,10 @@
       pnpm test
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA', '.']
+    args: ['build', '--build-arg', 'WEB_APP_BRANCH=$BRANCH_NAME', '--build-arg', 'VITE_API_URL=/api', '-t', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME', '.']
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA']
-
+    args: ['push', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME']
   # Run database migrations
   - name: 'gcr.io/cloud-builders/npm'
     entrypoint: npx
@@ -42,12 +41,12 @@
     args:
     - 'run'
     - 'deploy'
-    - 'sibarifly-dashboard-api-$BRANCH_NAME'
+    - 'sibarifly-dashboard-$BRANCH_NAME'
     - '--image'
-    - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA'
+    - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME'
     - '--region'
     - 'europe-west8'
     - '--allow-unauthenticated'
   images:
-  - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard-api:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME'
 

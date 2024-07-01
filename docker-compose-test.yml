@@ -1,0 +1,30 @@
+services:
+  db:
+    image: 'postgres:15'
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - 'db:/var/lib/postgresql/data'
+    ports:
+      - '5432:5432'
+  app:
+    image: sibarifly-dashboard-api
+    restart: always
+    environment:
+      DATABASE_URL: 'postgresql://postgres:postgres@db:5432/postgres'
+      DIRECT_URL: 'postgresql://postgres:postgres@db:5432/postgres'
+      ENVIRONMENT: production
+      JWT_AUTH_TOKEN_SECRET: 'ETTdW9KrbTgwvz5ySfGVXHxI9SDAGgL3Gp/X4iA8da4='
+      JWT_AUTH_TOKEN_EXPIRES_IN: '5h'
+      JWT_REFRESH_TOKEN_SECRET: 'bOdc4Rcdg0HTkHjKoI4y4uhPoqQIw6zmdQ1N+woW0NQ='
+      JWT_REFRESH_TOKEN_EXPIRES_IN: '1w'
+      DOMAIN: localhost
+      ADMIN_PASSWORD: admin
+    ports:
+      - '8000:8000'
+volumes:
+  db:
+    driver: local

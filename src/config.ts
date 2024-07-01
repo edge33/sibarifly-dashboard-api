@@ -1,15 +1,6 @@
 export const envSchema = {
   type: 'object',
-  required: [
-    'DATABASE_URL',
-    'ENVIRONMENT',
-    'JWT_AUTH_TOKEN_SECRET',
-    'JWT_AUTH_TOKEN_EXPIRES_IN',
-    'JWT_REFRESH_TOKEN_SECRET',
-    'JWT_REFRESH_TOKEN_EXPIRES_IN',
-    'DOMAIN',
-    'ADMIN_PASSWORD'
-  ],
+  required: [],
   properties: {
     DATABASE_URL: {
       type: 'string'
