@@ -9,6 +9,8 @@ tap.test('server', async (t) => {
   let capturedSwagger = t.captureFn(fastifySwaggerPlugin);
 
   t.beforeEach(async () => {
+    process.env.ENVIRONMENT = 'test';
+
     capturedRoutes = t.captureFn(routes);
 
     capturedSwagger = t.captureFn(fastifySwaggerPlugin);
@@ -41,9 +43,9 @@ tap.test('server', async (t) => {
       method: 'GET',
       url: '/'
     });
+
     t.equal(response.statusCode, 500);
     t.same(response.json(), {
-      code: 'Internal server error',
       statusCode: 500,
       message: 'Internal server error',
       error: 'Internal server error'
@@ -79,5 +81,33 @@ tap.test('server', async (t) => {
     await buildApp();
 
     t.equal(capturedSwagger.calls.length, 1);
+  });
+
+  t.test('not found handler should return index.html for non-api routes', async (t) => {
+    const app = await buildApp();
+
+    const response = await app.inject({
+      method: 'GET',
+      url: '/test'
+    });
+
+    t.equal(response.statusCode, 200);
+    t.equal(response.headers['content-type'], 'text/html; charset=UTF-8');
+  });
+
+  t.test('not found handler should return 404 for api routes', async (t) => {
+    const app = await buildApp();
+
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/test'
+    });
+
+    t.equal(response.statusCode, 404);
+    t.same(response.json(), {
+      message: 'Not found',
+      error: 'Not found',
+      statusCode: 404
+    });
   });
 });

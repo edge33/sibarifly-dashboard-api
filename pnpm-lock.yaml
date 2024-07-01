@@ -14,15 +14,15 @@ importers:
       '@fastify/cookie':
         specifier: ^9.3.1
         version: 9.3.1
-      '@fastify/cors':
-        specifier: ^9.0.1
-        version: 9.0.1
       '@fastify/env':
         specifier: ^4.3.0
         version: 4.3.0
       '@fastify/jwt':
         specifier: ^8.0.1
         version: 8.0.1
+      '@fastify/static':
+        specifier: ^7.0.4
+        version: 7.0.4
       '@fastify/type-provider-typebox':
         specifier: ^4.0.0
         version: 4.0.0(@sinclair/typebox@0.32.30)
@@ -272,9 +272,6 @@ packages:
 
   '@fastify/cookie@9.3.1':
     resolution: {integrity: sha512-h1NAEhB266+ZbZ0e9qUE6NnNR07i7DnNXWG9VbbZ8uC6O/hxHpl+Zoe5sw1yfdZ2U6XhToUGDnzQtWJdCaPwfg==}
-
-  '@fastify/cors@9.0.1':
-    resolution: {integrity: sha512-YY9Ho3ovI+QHIL2hW+9X4XqQjXLjJqsU+sMV/xFsxZkE8p3GNnYVFpoOxF7SsP5ZL76gwvbo3V9L+FIekBGU4Q==}
 
   '@fastify/env@4.3.0':
     resolution: {integrity: sha512-WSredffWvaYjiwHGK5wvY33LFi39gAasBMWelglA6Jk+d7uj/ZWp7icaPoM0kSR5g9M8OOALEvk+8SXiNhK1YA==}
@@ -2618,11 +2615,6 @@ snapshots:
     dependencies:
       cookie-signature: 1.2.1
       fastify-plugin: 4.5.1
-
-  '@fastify/cors@9.0.1':
-    dependencies:
-      fastify-plugin: 4.5.1
-      mnemonist: 0.39.6
 
   '@fastify/env@4.3.0':
     dependencies:

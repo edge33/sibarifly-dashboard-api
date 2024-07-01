@@ -5,7 +5,7 @@ import tap from 'tap';
 const getAuthTokenAndCookie = async (app: FastifyInstance) => {
   const response = await app.inject({
     method: 'POST',
-    url: '/auth/login',
+    url: '/api/auth/login',
     payload: {
       username: 'admin',
       password: 'admin'
@@ -39,7 +39,7 @@ tap.test('auth', async (t) => {
 
     const response = await app.inject({
       method: 'POST',
-      url: '/auth/login',
+      url: 'api/auth/login',
       payload: {
         username: 'invalid',
         password: 'invalid'
@@ -54,7 +54,7 @@ tap.test('auth', async (t) => {
 
     const response = await app.inject({
       method: 'POST',
-      url: '/auth/login',
+      url: 'api/auth/login',
       payload: {
         username: 'admin',
         password: 'admin'
@@ -72,7 +72,7 @@ tap.test('auth', async (t) => {
 
     const response = await app.inject({
       method: 'POST',
-      url: '/auth/refreshToken',
+      url: 'api/auth/refreshToken',
       headers: {
         Cookie: 'refreshToken=invalid'
       }
@@ -86,7 +86,7 @@ tap.test('auth', async (t) => {
 
     const response = await app.inject({
       method: 'POST',
-      url: '/auth/login',
+      url: 'api/auth/login',
       payload: {
         username: 'admin',
         password: 'admin'
@@ -107,7 +107,7 @@ tap.test('auth', async (t) => {
 
       const response = await app.inject({
         method: 'POST',
-        url: '/auth/refreshToken',
+        url: 'api/auth/refreshToken',
         headers: {
           Cookie: refreshCookie
         }
