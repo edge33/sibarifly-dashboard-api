@@ -35,6 +35,11 @@ export default async (app: FastifyInstance) => {
         firstOfficer
       } = request.body;
 
+      console.log('check date on server');
+      console.log('I got', dateTime);
+      console.log('parsed', new Date(dateTime));
+      console.log('localed', new Date(dateTime).toString());
+
       try {
         const result = await app.prisma.event.create({
           data: {
