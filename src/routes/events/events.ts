@@ -18,7 +18,7 @@ export default async (app: FastifyInstance) => {
       }
     },
     async (request, reply) => {
-      const data = await app.prisma.event.findMany();
+      const data = await app.prisma.event.findMany({ orderBy: { dateTime: 'desc' } });
       return reply.send(data);
     }
   );
