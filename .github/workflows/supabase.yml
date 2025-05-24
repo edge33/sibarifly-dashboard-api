@@ -2,12 +2,12 @@ name: Ping Supabase to Prevent Pausing
 
 on:
   schedule:
-    - cron: '0 9 * * 1,4' # 9:00 AM UTC every Monday and Thursday
+    # - cron: '0 9 * * 1,4' # 9:00 AM UTC every Monday and Thursday
+    - cron: '* * * * *' # every minute
   workflow_dispatch: # Manual trigger
 
 jobs:
   ping:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     strategy:
       matrix:
