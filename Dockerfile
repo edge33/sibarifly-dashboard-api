@@ -24,8 +24,8 @@ COPY . /app
 WORKDIR /app
 # RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build
 RUN pnpm run prisma-generate
+RUN pnpm run build
 
 FROM base
 WORKDIR /app
