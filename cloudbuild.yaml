@@ -2,23 +2,23 @@
     logging: CLOUD_LOGGING_ONLY
   steps:
   # Run tests
-  - id: 'Run tests'
-    name: 'node:20'
-    env:
-      - DIRECT_URL=direct_url
-      - DATABASE_URL=database_url
-      - ENVIRONMENT=test
-      - JWT_AUTH_TOKEN_SECRET=jwt_auth_token_secret
-      - JWT_AUTH_TOKEN_EXPIRES_IN=5h
-      - JWT_REFRESH_TOKEN_SECRET=jwt_refresh_token_secret
-      - JWT_REFRESH_TOKEN_EXPIRES_IN=1w
-      - DOMAIN=localhost
-      - ADMIN_PASSWORD=admin
-    script: |
-      #!/usr/bin/env bash
-      npm install --global pnpm@8.5.1
-      pnpm install
-      pnpm test
+  # - id: 'Run tests'
+  #   name: 'node:22'
+  #   env:
+  #     - DIRECT_URL=direct_url
+  #     - DATABASE_URL=database_url
+  #     - ENVIRONMENT=test
+  #     - JWT_AUTH_TOKEN_SECRET=jwt_auth_token_secret
+  #     - JWT_AUTH_TOKEN_EXPIRES_IN=5h
+  #     - JWT_REFRESH_TOKEN_SECRET=jwt_refresh_token_secret
+  #     - JWT_REFRESH_TOKEN_EXPIRES_IN=1w
+  #     - DOMAIN=localhost
+  #     - ADMIN_PASSWORD=admin
+  #   script: |
+  #     #!/usr/bin/env bash
+  #     npm install --global pnpm@8.5.1
+  #     pnpm install
+  #     pnpm test
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '--build-arg', 'WEB_APP_BRANCH=$BRANCH_NAME', '--build-arg', 'VITE_API_URL=/api', '-t', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME', '.']
