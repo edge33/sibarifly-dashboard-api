@@ -7,10 +7,11 @@ on:
 
 jobs:
   ping:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        environment: [dev]
+        environment: [dev, prod]
     environment: ${{ matrix.environment }}
 
     steps:
@@ -29,16 +30,15 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
-          TEST_VAR: ${{ secrets.TEST_VAR }}
         run: |
           node -e "
           (async () => {
             try {
-              console.log('testing', process.env.TEST_VAR)
+
               const { createClient } = require('@supabase/supabase-js');
               const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
-              const { data, error } = await supabase.from('event').select('*').limit(10);
+              const { data, error } = await supabase.from('Event').select('*').limit(10);
               if (error) throw error;
 
               console.log('Ping successful');
