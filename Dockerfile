@@ -15,13 +15,13 @@ RUN pnpm run build
 FROM base AS prod-deps
 COPY . /app
 WORKDIR /app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 RUN id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
 
 FROM base AS build
 COPY . /app
 WORKDIR /app
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run prisma-generate
 RUN pnpm run build
@@ -31,6 +31,7 @@ WORKDIR /app
 COPY --from=prod-deps /app/package.json /app/package.json
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
+COPY --from=build /app/generated /app/generated
 COPY --from=build-frontend /sibarifly-landing-form/dist /app/static/
 
 EXPOSE 8000

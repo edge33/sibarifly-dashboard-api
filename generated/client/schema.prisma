@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum EventType {
+  DEPARTURE
+  ARRIVAL
+}
+
+enum AircraftType {
+  ULM
+  GA
+}
+
+model Event {
+  id                   Int          @id @default(autoincrement())
+  dateTime             DateTime?
+  eventType            EventType    @default(ARRIVAL)
+  aircraftType         AircraftType @default(GA)
+  aircraftRegistration String
+  aircraftModel        String
+  departure            String
+  destination          String
+  paxNumber            Int
+  firstOfficer         String?
+  pilotInCommand       String
+  emailAddress         String?
+  mobilePhone          String?
+}
