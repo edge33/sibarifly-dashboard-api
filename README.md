@@ -11,6 +11,21 @@ built with [pnpm](https://pnpm.io/)
 it features
 
 - Typescript
-- Eslint
-- Prettier
+- Biome
 - Editorconfig
+
+## Local verification
+
+Use Node 24 and pnpm 12. The test database is defined in `docker-compose-test.yml`.
+
+```sh
+docker compose -f docker-compose-test.yml up -d db
+pnpm install --frozen-lockfile
+pnpm prisma-generate
+DATABASE_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres \
+  DIRECT_URL=postgresql://postgres:postgres@127.0.0.1:5432/postgres \
+  pnpm prisma migrate deploy
+pnpm lint
+pnpm build
+pnpm test
+```

@@ -1,6 +1,6 @@
-import { FastifyInstance } from 'fastify';
-import { HttpError, LoginCredentials, LoginCredentialsType } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
+import type { FastifyInstance } from 'fastify';
+import { HttpError, LoginCredentials, type LoginCredentialsType } from '../../types/index.js';
 
 export default async (app: FastifyInstance) => {
   app.post<{ Body: LoginCredentialsType }>(
@@ -10,10 +10,7 @@ export default async (app: FastifyInstance) => {
         tags: ['Auth'],
         body: LoginCredentials,
         response: {
-          '200': {
-            Headers: { 'Set-Cookie': Type.String() },
-            token: Type.String()
-          },
+          '200': Type.Object({ token: Type.String(), refreshToken: Type.String() }),
           '401': Type.Const('Unauthorized'),
           '500': HttpError
         }
@@ -43,12 +40,9 @@ export default async (app: FastifyInstance) => {
     {
       schema: {
         tags: ['Auth'],
-        headers: { Cookie: Type.String() },
+        headers: Type.Object({ cookie: Type.Optional(Type.String()) }),
         response: {
-          '200': {
-            token: Type.String(),
-            refreshToken: Type.String()
-          },
+          '200': Type.Object({ token: Type.String() }),
           '401': Type.Const('Unauthorized'),
           '500': HttpError
         }

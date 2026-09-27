@@ -1,6 +1,6 @@
+import fastifyJWT, { type FastifyJwtNamespace } from '@fastify/jwt';
+import type { FastifyPluginAsync } from 'fastify';
 import fp from 'fastify-plugin';
-import { FastifyPluginAsync } from 'fastify';
-import fastifyJWT, { FastifyJwtNamespace } from '@fastify/jwt';
 
 // https://github.com/fastify/fastify-jwt/issues/321
 declare module 'fastify' {

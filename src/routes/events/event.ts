@@ -1,6 +1,6 @@
-import { FastifyInstance } from 'fastify';
-import { HttpError, Event } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
+import type { FastifyInstance } from 'fastify';
+import { Event, HttpError } from '../../types/index.js';
 
 export default async (app: FastifyInstance) => {
   app.addHook('preHandler', async (request, reply) => {
@@ -12,7 +12,7 @@ export default async (app: FastifyInstance) => {
     {
       schema: {
         tags: ['Events'],
-        params: { eventId: Type.Number() },
+        params: Type.Object({ eventId: Type.Number() }),
         response: {
           200: Event,
           404: HttpError
@@ -22,7 +22,7 @@ export default async (app: FastifyInstance) => {
     async (request, reply) => {
       const { eventId } = request.params;
 
-      let data;
+      let data: Awaited<ReturnType<typeof app.prisma.event.findUnique>>;
       try {
         data = await app.prisma.event.findUnique({ where: { id: eventId } });
       } catch (error) {

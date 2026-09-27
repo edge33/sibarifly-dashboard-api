@@ -1,5 +1,6 @@
+import { PrismaPg } from '@prisma/adapter-pg';
+import type { FastifyPluginAsync } from 'fastify';
 import fp from 'fastify-plugin';
-import { FastifyPluginAsync } from 'fastify';
 import { PrismaClient } from '../../generated/client/index.js';
 
 declare module 'fastify' {
@@ -9,7 +10,8 @@ declare module 'fastify' {
 }
 
 const prismaPlugin: FastifyPluginAsync = fp(async (server) => {
-  const prisma = new PrismaClient();
+  const adapter = new PrismaPg({ connectionString: server.config.DATABASE_URL });
+  const prisma = new PrismaClient({ adapter });
 
   await prisma.$connect();
 

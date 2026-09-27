@@ -3,7 +3,7 @@
   steps:
   # Run tests
   # - id: 'Run tests'
-  #   name: 'node:22'
+  #   name: 'node:24'
   #   env:
   #     - DIRECT_URL=direct_url
   #     - DATABASE_URL=database_url
@@ -16,7 +16,7 @@
   #     - ADMIN_PASSWORD=admin
   #   script: |
   #     #!/usr/bin/env bash
-  #     npm install --global pnpm@8.5.1
+  #     npm install --global pnpm@12.6.0
   #     pnpm install
   #     pnpm test
   # Build the container image
@@ -26,15 +26,14 @@
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME']
   # Run database migrations
-  - name: 'gcr.io/cloud-builders/npm'
-    entrypoint: npx
+  - name: 'node:24-slim'
+    entrypoint: sh
     env:
      - DIRECT_URL=$_DIRECT_URL
      - DATABASE_URL=$_DATABASE_URL
     args:
-      - 'prisma'
-      - 'migrate'
-      - 'deploy'
+      - '-c'
+      - 'npm install -g pnpm@12.6.0 && pnpm install --frozen-lockfile && pnpm prisma migrate deploy'
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
@@ -49,4 +48,3 @@
     - '--allow-unauthenticated'
   images:
   - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME'
-

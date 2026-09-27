@@ -1,6 +1,5 @@
-import { FastifyInstance } from 'fastify';
-import { HttpError, Event, type EventType } from '../../types/index.js';
-import { Type } from '@sinclair/typebox';
+import type { FastifyInstance } from 'fastify';
+import { Event, type EventType, HttpError } from '../../types/index.js';
 
 export default async (app: FastifyInstance) => {
   app.post<{ Body: EventType }>(
@@ -10,11 +9,6 @@ export default async (app: FastifyInstance) => {
         tags: ['Events'],
         body: Event,
         response: {
-          '201': {
-            Headers: {
-              Location: Type.String()
-            }
-          },
           '500': HttpError
         }
       }
