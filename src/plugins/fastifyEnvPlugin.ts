@@ -1,6 +1,6 @@
-import fp from 'fastify-plugin';
-import { FastifyPluginAsync } from 'fastify';
 import fastifyEnv from '@fastify/env';
+import type { FastifyPluginAsync } from 'fastify';
+import fp from 'fastify-plugin';
 import { envSchema } from '../config.js';
 
 declare module 'fastify' {

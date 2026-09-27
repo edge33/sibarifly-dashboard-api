@@ -1,7 +1,7 @@
 import assert from 'node:assert';
+import type { PrismaClient } from '@prisma/client/extension';
+import fastify, { type FastifyInstance } from 'fastify';
 import tap from 'tap';
-import fastify, { FastifyInstance } from 'fastify';
-import { PrismaClient } from '@prisma/client/extension';
 import event from '../../../../routes/events/event.js';
 
 tap.test('event', async (t) => {
