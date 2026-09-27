@@ -1,7 +1,7 @@
 import assert from 'node:assert';
-import tap from 'tap';
+import type { PrismaClient } from '@prisma/client/extension';
 import fastify from 'fastify';
-import { PrismaClient } from '@prisma/client/extension';
+import tap from 'tap';
 import events from '../../../../routes/events/events.js';
 
 const payload = [

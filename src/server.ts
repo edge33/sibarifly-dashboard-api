@@ -1,18 +1,18 @@
-import fastify from 'fastify';
-import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import * as url from 'node:url';
 import cookies from '@fastify/cookie';
 import fastifyStatic from '@fastify/static';
+import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
+import fastify from 'fastify';
 
-import * as url from 'url';
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
-import routes from './routes/index.js';
-import prismaPlugin from './plugins/prismaPlugin.js';
-import fastifyEnvPlugin from './plugins/fastifyEnvPlugin.js';
-import { HttpErrorType } from './types/index.js';
+import path from 'node:path';
 import authPlugin from './plugins/authPlugin.js';
+import fastifyEnvPlugin from './plugins/fastifyEnvPlugin.js';
 import JWTPlugin from './plugins/JWTPlugin.js';
-import path from 'path';
+import prismaPlugin from './plugins/prismaPlugin.js';
+import routes from './routes/index.js';
+import type { HttpErrorType } from './types/index.js';
 
 const envToLogger = {
   development: {
@@ -53,7 +53,7 @@ const buildApp = async () => {
     root: path.join(__dirname, '..', 'static/')
   });
 
-  app.setErrorHandler((error, request, reply) => {
+  app.setErrorHandler((error, _request, reply) => {
     app.log.error(error);
     /**
      * decide whether expose more detailed errors

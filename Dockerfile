@@ -1,29 +1,25 @@
-FROM node:22-slim AS base
+FROM node:24-slim AS base
 RUN apt-get update && apt-get install -y openssl git
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+RUN npm install -g pnpm@12.6.0
+
+FROM base AS prod-deps
+COPY . /app
+WORKDIR /app
+RUN pnpm install --prod --frozen-lockfile
+
+FROM base AS build
+COPY . /app
+WORKDIR /app
+RUN pnpm install --frozen-lockfile
+RUN pnpm run prisma-generate
+RUN pnpm run build
 
 FROM base AS build-frontend
 ARG WEB_APP_BRANCH
 ARG VITE_API_URL
 RUN git clone --single-branch --branch ${WEB_APP_BRANCH} https://github.com/edge33/sibarifly-landing-form
 WORKDIR /sibarifly-landing-form
-RUN id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build
-
-FROM base AS prod-deps
-COPY . /app
-WORKDIR /app
-# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-RUN id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
-FROM base AS build
-COPY . /app
-WORKDIR /app
-# RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run prisma-generate
+RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 
 FROM base

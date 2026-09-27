@@ -1,6 +1,6 @@
-import { FastifyInstance } from 'fastify';
-import { Event } from '../../types/index.js';
 import { Type } from '@sinclair/typebox';
+import type { FastifyInstance } from 'fastify';
+import { Event } from '../../types/index.js';
 
 export default async (app: FastifyInstance) => {
   app.addHook('preHandler', async (request, reply) => {
@@ -17,7 +17,7 @@ export default async (app: FastifyInstance) => {
         }
       }
     },
-    async (request, reply) => {
+    async (_request, reply) => {
       const data = await app.prisma.event.findMany({ orderBy: { dateTime: 'desc' } });
       return reply.send(data);
     }

@@ -1,5 +1,5 @@
 import assert from 'node:assert';
-import { FastifyInstance } from 'fastify';
+import type { FastifyInstance } from 'fastify';
 import tap from 'tap';
 
 const getAuthTokenAndCookie = async (app: FastifyInstance) => {

@@ -1,7 +1,10 @@
-import { FastifyInstance } from 'fastify';
+import { config as loadEnv } from 'dotenv';
+import type { FastifyInstance } from 'fastify';
 import tap from 'tap';
-import routes from '../routes/index.js';
 import fastifySwaggerPlugin from '../plugins/fastifySwaggerPlugin.js';
+import routes from '../routes/index.js';
+
+loadEnv({ path: '.env.test' });
 
 tap.test('server', async (t) => {
   let buildApp: () => Promise<FastifyInstance>;
@@ -77,6 +80,9 @@ tap.test('server', async (t) => {
 
   t.test('registers swagger plugin in DEV mode', async (t) => {
     process.env.ENVIRONMENT = 'development';
+    t.teardown(() => {
+      process.env.ENVIRONMENT = 'test';
+    });
     await buildApp();
 
     t.equal(capturedSwagger.calls.length, 1);
@@ -91,7 +97,7 @@ tap.test('server', async (t) => {
     });
 
     t.equal(response.statusCode, 200);
-    t.equal(response.headers['content-type'], 'text/html; charset=UTF-8');
+    t.equal(response.headers['content-type'], 'text/html; charset=utf-8');
   });
 
   t.test('not found handler should return 404 for api routes', async (t) => {

@@ -1,12 +1,12 @@
 import assert from 'node:assert';
+import type { PrismaClient } from '@prisma/client/extension';
+import fastify, { type FastifyInstance } from 'fastify';
 import tap from 'tap';
-import fastify, { FastifyInstance } from 'fastify';
 import create from '../../../../routes/events/create.js';
-import { PrismaClient } from '@prisma/client/extension';
 
 tap.test('create', async (t) => {
   let app: FastifyInstance;
-  const capturedCreate = t.captureFn((args: []) => Promise.resolve({ result: { id: 1 } }));
+  const capturedCreate = t.captureFn((_args: []) => Promise.resolve({ result: { id: 1 } }));
   t.beforeEach(async () => {
     app = fastify();
     const prisma: PrismaClient = {
