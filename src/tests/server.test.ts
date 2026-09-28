@@ -1,115 +1,86 @@
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 import { config as loadEnv } from 'dotenv';
 import type { FastifyInstance } from 'fastify';
-import tap from 'tap';
-import fastifySwaggerPlugin from '../plugins/fastifySwaggerPlugin.ts';
-import routes from '../routes/index.ts';
 
 loadEnv({ path: '.env.test' });
 
-tap.test('server', async (t) => {
-  let buildApp: () => Promise<FastifyInstance>;
-  let capturedRoutes = t.captureFn(routes);
-  let capturedSwagger = t.captureFn(fastifySwaggerPlugin);
+mock.module('../plugins/prismaPlugin.ts', {
+  exports: { default: async () => {} }
+});
 
-  t.beforeEach(async () => {
-    process.env.ENVIRONMENT = 'test';
+const { default: buildApp } = await import('../server.ts');
 
-    capturedRoutes = t.captureFn(routes);
+let app: FastifyInstance;
 
-    capturedSwagger = t.captureFn(fastifySwaggerPlugin);
-    const { default: buildApp_ } = await t.mockImport<typeof import('../server.ts')>(
-      '../server.ts',
-      {
-        '../plugins/prismaPlugin.ts': {
-          default: (app: FastifyInstance) => {
-            return app;
-          }
-        },
-        '../routes/index.ts': {
-          default: capturedRoutes
-        },
-        '../plugins/fastifySwaggerPlugin.ts': {
-          default: capturedSwagger
-        }
-      }
-    );
-    buildApp = buildApp_;
-  });
+beforeEach(async () => {
+  process.env.ENVIRONMENT = 'test';
+  app = await buildApp();
+});
 
-  t.test('should return error with correct format', async (t) => {
-    const app = await buildApp();
+afterEach(async () => {
+  await app.close();
+});
 
+describe('server', () => {
+  it('should return error with correct format', async () => {
     app.get('/', async () => {
       throw new Error('test');
     });
-    const response = await app.inject({
-      method: 'GET',
-      url: '/'
-    });
+    const response = await app.inject({ method: 'GET', url: '/' });
 
-    t.equal(response.statusCode, 500);
-    t.same(response.json(), {
+    assert.equal(response.statusCode, 500);
+    assert.deepEqual(response.json(), {
       statusCode: 500,
       message: 'Internal server error',
       error: 'Internal server error'
     });
   });
 
-  t.test('plugins are registered', async (t) => {
-    const app = await buildApp();
+  it('plugins and routes are registered', async () => {
     app.get('/', async (request, response) => {
-      t.hasProp(request, 'cookies');
-
-      t.hasProp(request, 'authJwtVerify');
-      t.hasProp(request, 'authJwtDecode');
-      t.hasProp(request, 'refreshJwtVerify');
-      t.hasProp(request, 'refreshJwtDecode');
-
-      t.hasProp(response, 'authJwtSign');
-      t.hasProp(response, 'refreshJwtSign');
+      assert.ok('cookies' in request);
+      assert.ok('authJwtVerify' in request);
+      assert.ok('authJwtDecode' in request);
+      assert.ok('refreshJwtVerify' in request);
+      assert.ok('refreshJwtDecode' in request);
+      assert.ok('authJwtSign' in response);
+      assert.ok('refreshJwtSign' in response);
     });
 
-    t.equal(capturedRoutes.calls.length, 1);
-
-    t.hasProp(app, 'verifyJWT');
-    await app.inject({
-      method: 'GET',
-      url: '/'
-    });
+    await app.ready();
+    assert.ok('verifyJWT' in app);
+    assert.ok(app.hasRoute({ method: 'POST', url: '/api/auth/login' }));
+    const response = await app.inject({ method: 'GET', url: '/' });
+    assert.equal(response.statusCode, 200);
   });
 
-  t.test('registers swagger plugin in DEV mode', async (t) => {
+  it('registers swagger plugin in DEV mode', async (t) => {
     process.env.ENVIRONMENT = 'development';
-    t.teardown(() => {
+    t.after(() => {
       process.env.ENVIRONMENT = 'test';
     });
-    await buildApp();
+    const devApp = await buildApp();
+    t.after(async () => {
+      await devApp.close();
+    });
+    await devApp.ready();
 
-    t.equal(capturedSwagger.calls.length, 1);
+    assert.ok(devApp.hasRoute({ method: 'GET', url: '/docs/' }));
   });
 
-  t.test('not found handler should return index.html for non-api routes', async (t) => {
-    const app = await buildApp();
+  it('not found handler should return index.html for non-api routes', async () => {
+    const response = await app.inject({ method: 'GET', url: '/test' });
 
-    const response = await app.inject({
-      method: 'GET',
-      url: '/test'
-    });
-
-    t.equal(response.statusCode, 200);
-    t.equal(response.headers['content-type'], 'text/html; charset=utf-8');
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.headers['content-type'], 'text/html; charset=utf-8');
   });
 
-  t.test('not found handler should return 404 for api routes', async (t) => {
-    const app = await buildApp();
+  it('not found handler should return 404 for api routes', async () => {
+    const response = await app.inject({ method: 'GET', url: '/api/test' });
 
-    const response = await app.inject({
-      method: 'GET',
-      url: '/api/test'
-    });
-
-    t.equal(response.statusCode, 404);
-    t.same(response.json(), {
+    assert.equal(response.statusCode, 404);
+    assert.deepEqual(response.json(), {
       message: 'Not found',
       error: 'Not found',
       statusCode: 404
