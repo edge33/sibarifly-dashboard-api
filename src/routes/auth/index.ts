@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import type { FastifyInstance } from 'fastify';
-import { HttpError, LoginCredentials, type LoginCredentialsType } from '../../types/index.js';
+import { HttpError, LoginCredentials, type LoginCredentialsType } from '../../types/index.ts';
 
 export default async (app: FastifyInstance) => {
   app.post<{ Body: LoginCredentialsType }>(

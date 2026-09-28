@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { Event, type EventType, HttpError } from '../../types/index.js';
+import { Event, type EventType, HttpError } from '../../types/index.ts';
 
 export default async (app: FastifyInstance) => {
   app.post<{ Body: EventType }>(

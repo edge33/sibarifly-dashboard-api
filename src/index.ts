@@ -1,4 +1,4 @@
-import buildApp from './server.js';
+import buildApp from './server.ts';
 
 const app = await buildApp();
 

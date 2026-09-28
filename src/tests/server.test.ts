@@ -1,8 +1,8 @@
 import { config as loadEnv } from 'dotenv';
 import type { FastifyInstance } from 'fastify';
 import tap from 'tap';
-import fastifySwaggerPlugin from '../plugins/fastifySwaggerPlugin.js';
-import routes from '../routes/index.js';
+import fastifySwaggerPlugin from '../plugins/fastifySwaggerPlugin.ts';
+import routes from '../routes/index.ts';
 
 loadEnv({ path: '.env.test' });
 
@@ -17,18 +17,18 @@ tap.test('server', async (t) => {
     capturedRoutes = t.captureFn(routes);
 
     capturedSwagger = t.captureFn(fastifySwaggerPlugin);
-    const { default: buildApp_ } = await t.mockImport<typeof import('../server.js')>(
-      '../server.js',
+    const { default: buildApp_ } = await t.mockImport<typeof import('../server.ts')>(
+      '../server.ts',
       {
-        '../plugins/prismaPlugin.js': {
+        '../plugins/prismaPlugin.ts': {
           default: (app: FastifyInstance) => {
             return app;
           }
         },
-        '../routes/index.js': {
+        '../routes/index.ts': {
           default: capturedRoutes
         },
-        '../plugins/fastifySwaggerPlugin.js': {
+        '../plugins/fastifySwaggerPlugin.ts': {
           default: capturedSwagger
         }
       }

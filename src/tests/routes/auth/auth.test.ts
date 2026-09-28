@@ -21,10 +21,10 @@ tap.test('auth', async (t) => {
   let buildApp: () => Promise<FastifyInstance>;
 
   t.beforeEach(async () => {
-    const { default: buildApp_ } = await t.mockImport<typeof import('../../../server.js')>(
-      '../../../server.js',
+    const { default: buildApp_ } = await t.mockImport<typeof import('../../../server.ts')>(
+      '../../../server.ts',
       {
-        '../../../plugins/prismaPlugin.js': {
+        '../../../plugins/prismaPlugin.ts': {
           default: (app: FastifyInstance) => {
             return app;
           }

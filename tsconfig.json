@@ -4,7 +4,11 @@
     "rootDir": "src",
     "outDir": "dist",
     "sourceMap": false,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "allowImportingTsExtensions": true,
+    "rewriteRelativeImportExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true
   },
 
   "include": ["src/**/*.ts"],

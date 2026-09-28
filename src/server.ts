@@ -7,12 +7,12 @@ import fastify from 'fastify';
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 import path from 'node:path';
-import authPlugin from './plugins/authPlugin.js';
-import fastifyEnvPlugin from './plugins/fastifyEnvPlugin.js';
-import JWTPlugin from './plugins/JWTPlugin.js';
-import prismaPlugin from './plugins/prismaPlugin.js';
-import routes from './routes/index.js';
-import type { HttpErrorType } from './types/index.js';
+import authPlugin from './plugins/authPlugin.ts';
+import fastifyEnvPlugin from './plugins/fastifyEnvPlugin.ts';
+import JWTPlugin from './plugins/JWTPlugin.ts';
+import prismaPlugin from './plugins/prismaPlugin.ts';
+import routes from './routes/index.ts';
+import type { HttpErrorType } from './types/index.ts';
 
 const envToLogger = {
   development: {
@@ -39,7 +39,7 @@ const buildApp = async () => {
   app.register(cookies);
   await app.register(fastifyEnvPlugin);
   if (app.config.ENVIRONMENT === 'development') {
-    app.register(import('./plugins/fastifySwaggerPlugin.js'));
+    app.register(import('./plugins/fastifySwaggerPlugin.ts'));
   }
 
   app.register(prismaPlugin);

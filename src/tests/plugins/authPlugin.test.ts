@@ -1,6 +1,6 @@
 import fastify from 'fastify';
 import tap from 'tap';
-import authPlugin from '../../plugins/authPlugin.js';
+import authPlugin from '../../plugins/authPlugin.ts';
 
 tap.test('authPlugin', async (t) => {
   t.test('should decorate the server with verifyJWT method', async () => {

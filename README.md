@@ -17,6 +17,7 @@ it features
 ## Local verification
 
 Use Node 24 and pnpm 12. The test database is defined in `docker-compose-test.yml`.
+Development runs TypeScript directly with Node's built-in type stripping (`pnpm dev`); the production build still emits JavaScript with `tsc`.
 
 ```sh
 docker compose -f docker-compose-test.yml up -d db
