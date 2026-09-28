@@ -23,5 +23,5 @@ jobs:
       - name: Biome check
         run: pnpm lint
 
-      - name: Test
-        run: pnpm test
+      - name: Test with coverage
+        run: pnpm test:coverage
