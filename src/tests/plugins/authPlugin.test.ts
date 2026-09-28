@@ -1,18 +1,19 @@
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import fastify from 'fastify';
-import tap from 'tap';
-import authPlugin from '../../plugins/authPlugin.js';
+import authPlugin from '../../plugins/authPlugin.ts';
 
-tap.test('authPlugin', async (t) => {
-  t.test('should decorate the server with verifyJWT method', async () => {
+describe('authPlugin', () => {
+  it('should decorate the server with verifyJWT method', async () => {
     const app = fastify();
     app.register(authPlugin);
     await app.ready();
-    t.hasProp(app, 'verifyJWT');
+    assert.ok('verifyJWT' in app);
   });
 
-  t.test('should call authJwtVerify when calling verifyJWT', async () => {
+  it('should call authJwtVerify when calling verifyJWT', async (t) => {
     const app = fastify();
-    const capturedAuthJwtVerify = t.captureFn(() => Promise.resolve());
+    const capturedAuthJwtVerify = t.mock.fn(() => Promise.resolve());
     app.decorateRequest('authJwtVerify', capturedAuthJwtVerify);
     await app.register(authPlugin);
     app.get('/', async (request, reply) => {
@@ -23,10 +24,10 @@ tap.test('authPlugin', async (t) => {
       method: 'GET',
       url: '/'
     });
-    t.equal(capturedAuthJwtVerify.calls.length, 1);
+    assert.equal(capturedAuthJwtVerify.mock.calls.length, 1);
   });
 
-  t.test('should return Unauthorized response when authJwtVerify throws', async () => {
+  it('should return Unauthorized response when authJwtVerify throws', async () => {
     const app = fastify();
     app.decorateRequest('authJwtVerify', () => {
       throw new Error();
@@ -40,6 +41,6 @@ tap.test('authPlugin', async (t) => {
       method: 'GET',
       url: '/'
     });
-    t.equal(response.statusCode, 401);
+    assert.equal(response.statusCode, 401);
   });
 });

@@ -1,8 +1,8 @@
-import assert from 'node:assert';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import type { PrismaClient } from '@prisma/client/extension';
 import fastify from 'fastify';
-import tap from 'tap';
-import events from '../../../../routes/events/events.js';
+import events from '../../../../routes/events/events.ts';
 
 const payload = [
   {
@@ -51,8 +51,8 @@ const buildInstance = (withError: boolean) => {
   return app;
 };
 
-tap.test('events', async (t) => {
-  t.test('should return all the events', async (t) => {
+describe('events', () => {
+  it('should return all the events', async () => {
     const app = buildInstance(false);
     const response = await app.inject({
       method: 'GET',
@@ -60,6 +60,6 @@ tap.test('events', async (t) => {
     });
 
     assert.deepEqual(response.json(), payload);
-    t.equal(response.statusCode, 200);
+    assert.equal(response.statusCode, 200);
   });
 });

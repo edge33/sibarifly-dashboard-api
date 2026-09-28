@@ -1,22 +1,18 @@
-import assert from 'node:assert';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import type { PrismaClient } from '@prisma/client/extension';
-import fastify, { type FastifyInstance } from 'fastify';
-import tap from 'tap';
-import create from '../../../../routes/events/create.js';
+import fastify from 'fastify';
+import create from '../../../../routes/events/create.ts';
 
-tap.test('create', async (t) => {
-  let app: FastifyInstance;
-  const capturedCreate = t.captureFn((_args: []) => Promise.resolve({ result: { id: 1 } }));
-  t.beforeEach(async () => {
-    app = fastify();
+describe('create', () => {
+  it('should create an event', async (t) => {
+    const capturedCreate = t.mock.fn(() => Promise.resolve({ result: { id: 1 } }));
+    const app = fastify();
     const prisma: PrismaClient = {
       event: { create: capturedCreate }
     };
     app.decorate('prisma', prisma);
     app.register(create);
-  });
-
-  t.test('should create an event', async (t) => {
     const payload = {
       dateTime: '2024-01-01',
       eventType: 'ARRIVAL',
@@ -39,17 +35,17 @@ tap.test('create', async (t) => {
       payload
     });
 
-    const args = capturedCreate.calls[0].args[0];
+    const args = capturedCreate.mock.calls[0].arguments[0];
     assert.deepEqual(args, {
       data: { ...payload, dateTime: new Date(payload.dateTime) }
     });
 
-    t.equal(response.statusCode, 201);
+    assert.equal(response.statusCode, 201);
   });
 
-  t.test('should throw an error with invalid data', async (t) => {
+  it('should throw an error with invalid data', async (t) => {
     const app = fastify();
-    const capturedCreate = t.captureFn(() => Promise.reject(new Error()));
+    const capturedCreate = t.mock.fn(() => Promise.reject(new Error()));
     const prisma: PrismaClient = {
       event: { create: capturedCreate }
     };
@@ -78,6 +74,6 @@ tap.test('create', async (t) => {
       payload
     });
 
-    t.equal(response.statusCode, 500);
+    assert.equal(response.statusCode, 500);
   });
 });

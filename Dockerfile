@@ -1,18 +1,17 @@
 FROM node:24-slim AS base
 RUN apt-get update && apt-get install -y openssl git
-RUN npm install -g pnpm@12.6.0
+RUN npm install -g pnpm@12.7.0
 
 FROM base AS prod-deps
 COPY . /app
 WORKDIR /app
 RUN pnpm install --prod --frozen-lockfile
 
-FROM base AS build
+FROM base AS prisma-client
 COPY . /app
 WORKDIR /app
 RUN pnpm install --frozen-lockfile
 RUN pnpm run prisma-generate
-RUN pnpm run build
 
 FROM base AS build-frontend
 ARG WEB_APP_BRANCH
@@ -26,9 +25,9 @@ FROM base
 WORKDIR /app
 COPY --from=prod-deps /app/package.json /app/package.json
 COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
-COPY --from=build /app/generated /app/generated
+COPY src /app/src
+COPY --from=prisma-client /app/generated /app/generated
 COPY --from=build-frontend /sibarifly-landing-form/dist /app/static/
 
 EXPOSE 8000
-CMD [ "node", "dist/index.js"]
+CMD [ "node", "src/index.ts"]
