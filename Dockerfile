@@ -1,6 +1,6 @@
 FROM node:24-slim AS base
 RUN apt-get update && apt-get install -y openssl git
-RUN npm install -g pnpm@12.6.0
+RUN npm install -g pnpm@12.7.0
 
 FROM base AS prod-deps
 COPY . /app
