@@ -1,12 +1,12 @@
-import assert from 'node:assert';
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
 import type { PrismaClient } from '@prisma/client/extension';
 import fastify, { type FastifyInstance } from 'fastify';
-import tap from 'tap';
 import event from '../../../../routes/events/event.ts';
 
-tap.test('event', async (t) => {
+describe('event', () => {
   let app: FastifyInstance;
-  t.beforeEach(async () => {
+  beforeEach(async () => {
     app = fastify();
     app.decorate('verifyJWT', () => Promise.resolve());
     const prisma: PrismaClient = {
@@ -39,7 +39,7 @@ tap.test('event', async (t) => {
     app.register(event);
   });
 
-  t.test('should return an event with an id', async (t) => {
+  it('should return an event with an id', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/1'
@@ -59,24 +59,24 @@ tap.test('event', async (t) => {
       destination: 'destination',
       emailAddress: 'mail@mail.com'
     });
-    t.equal(response.statusCode, 200);
+    assert.equal(response.statusCode, 200);
   });
 
-  t.test('should return 404 when event with a given id is not found', async (t) => {
+  it('should return 404 when event with a given id is not found', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/2'
     });
 
-    t.equal(response.statusCode, 404);
+    assert.equal(response.statusCode, 404);
   });
 
-  t.test('should return 500 when event query throws', async (t) => {
+  it('should return 500 when event query throws', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/3'
     });
 
-    t.equal(response.statusCode, 500);
+    assert.equal(response.statusCode, 500);
   });
 });

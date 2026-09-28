@@ -1,6 +1,6 @@
-import assert from 'node:assert';
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 import type { FastifyInstance } from 'fastify';
-import tap from 'tap';
 
 const getAuthTokenAndCookie = async (app: FastifyInstance) => {
   const response = await app.inject({
@@ -17,26 +17,23 @@ const getAuthTokenAndCookie = async (app: FastifyInstance) => {
   return { token: body.token, cookie };
 };
 
-tap.test('auth', async (t) => {
-  let buildApp: () => Promise<FastifyInstance>;
+mock.module('../../../plugins/prismaPlugin.ts', {
+  exports: { default: async () => {} }
+});
 
-  t.beforeEach(async () => {
-    const { default: buildApp_ } = await t.mockImport<typeof import('../../../server.ts')>(
-      '../../../server.ts',
-      {
-        '../../../plugins/prismaPlugin.ts': {
-          default: (app: FastifyInstance) => {
-            return app;
-          }
-        }
-      }
-    );
-    buildApp = buildApp_;
-  });
+const { default: buildApp } = await import('../../../server.ts');
+let app: FastifyInstance;
 
-  t.test('should return Unauthorized response when credentials are invalid', async () => {
-    const app = await buildApp();
+beforeEach(async () => {
+  app = await buildApp();
+});
 
+afterEach(async () => {
+  await app.close();
+});
+
+describe('auth', () => {
+  it('should return Unauthorized response when credentials are invalid', async () => {
     const response = await app.inject({
       method: 'POST',
       url: 'api/auth/login',
@@ -46,12 +43,10 @@ tap.test('auth', async (t) => {
       }
     });
 
-    t.equal(response.statusCode, 401);
+    assert.equal(response.statusCode, 401);
   });
 
-  t.test('should return access token and refresh token with valid credentials', async () => {
-    const app = await buildApp();
-
+  it('should return access token and refresh token with valid credentials', async () => {
     const response = await app.inject({
       method: 'POST',
       url: 'api/auth/login',
@@ -63,13 +58,11 @@ tap.test('auth', async (t) => {
     const body = JSON.parse(response.body);
     const cookie = response.headers['set-cookie'];
 
-    t.type(body.token, 'string');
+    assert.equal(typeof body.token, 'string');
     assert.ok(cookie?.toString().includes('refreshToken'));
   });
 
-  t.test('should return Unauthorized response when refreshToken is invalid', async () => {
-    const app = await buildApp();
-
+  it('should return Unauthorized response when refreshToken is invalid', async () => {
     const response = await app.inject({
       method: 'POST',
       url: 'api/auth/refreshToken',
@@ -78,45 +71,23 @@ tap.test('auth', async (t) => {
       }
     });
 
-    t.equal(response.statusCode, 401);
+    assert.equal(response.statusCode, 401);
   });
 
-  t.test('should return access token and refresh token with valid credentials', async () => {
-    const app = await buildApp();
+  it('should return new access token and refresh token when issuing a valid refreshtoken', async () => {
+    const { cookie: refreshCookie } = await getAuthTokenAndCookie(app);
 
     const response = await app.inject({
       method: 'POST',
-      url: 'api/auth/login',
-      payload: {
-        username: 'admin',
-        password: 'admin'
+      url: 'api/auth/refreshToken',
+      headers: {
+        Cookie: refreshCookie
       }
     });
+
     const body = JSON.parse(response.body);
     const cookie = response.headers['set-cookie'];
-
-    t.type(body.token, 'string');
+    assert.equal(typeof body.token, 'string');
     assert.ok(cookie?.toString().includes('refreshToken'));
   });
-
-  t.test(
-    'should return new access token and refresh token when issuing a valid refreshtoken',
-    async () => {
-      const app = await buildApp();
-      const { cookie: refreshCookie } = await getAuthTokenAndCookie(app);
-
-      const response = await app.inject({
-        method: 'POST',
-        url: 'api/auth/refreshToken',
-        headers: {
-          Cookie: refreshCookie
-        }
-      });
-
-      const body = JSON.parse(response.body);
-      const cookie = response.headers['set-cookie'];
-      t.type(body.token, 'string');
-      assert.ok(cookie?.toString().includes('refreshToken'));
-    }
-  );
 });
