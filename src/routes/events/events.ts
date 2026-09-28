@@ -1,6 +1,6 @@
 import { Type } from '@sinclair/typebox';
 import type { FastifyInstance } from 'fastify';
-import { Event } from '../../types/index.js';
+import { Event } from '../../types/index.ts';
 
 export default async (app: FastifyInstance) => {
   app.addHook('preHandler', async (request, reply) => {

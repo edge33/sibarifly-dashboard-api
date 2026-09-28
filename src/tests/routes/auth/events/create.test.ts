@@ -2,7 +2,7 @@ import assert from 'node:assert';
 import type { PrismaClient } from '@prisma/client/extension';
 import fastify, { type FastifyInstance } from 'fastify';
 import tap from 'tap';
-import create from '../../../../routes/events/create.js';
+import create from '../../../../routes/events/create.ts';
 
 tap.test('create', async (t) => {
   let app: FastifyInstance;

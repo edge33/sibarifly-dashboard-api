@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
-import create from './create.js';
-import event from './event.js';
-import events from './events.js';
+import create from './create.ts';
+import event from './event.ts';
+import events from './events.ts';
 
 export default async (app: FastifyInstance) => {
   app.register(create);

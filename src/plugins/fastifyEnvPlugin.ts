@@ -1,7 +1,7 @@
 import fastifyEnv from '@fastify/env';
 import type { FastifyPluginAsync } from 'fastify';
 import fp from 'fastify-plugin';
-import { envSchema } from '../config.js';
+import { envSchema } from '../config.ts';
 
 declare module 'fastify' {
   interface FastifyInstance {

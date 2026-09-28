@@ -1,10 +1,10 @@
 {
   "extends": "fastify-tsconfig",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "dist",
-    "sourceMap": false,
-    "noEmitOnError": true
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true
   },
 
   "include": ["src/**/*.ts"],
