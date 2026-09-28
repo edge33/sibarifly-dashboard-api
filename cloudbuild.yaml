@@ -1,24 +1,6 @@
   options:
     logging: CLOUD_LOGGING_ONLY
   steps:
-  # Run tests
-  # - id: 'Run tests'
-  #   name: 'node:24'
-  #   env:
-  #     - DIRECT_URL=direct_url
-  #     - DATABASE_URL=database_url
-  #     - ENVIRONMENT=test
-  #     - JWT_AUTH_TOKEN_SECRET=jwt_auth_token_secret
-  #     - JWT_AUTH_TOKEN_EXPIRES_IN=5h
-  #     - JWT_REFRESH_TOKEN_SECRET=jwt_refresh_token_secret
-  #     - JWT_REFRESH_TOKEN_EXPIRES_IN=1w
-  #     - DOMAIN=localhost
-  #     - ADMIN_PASSWORD=admin
-  #   script: |
-  #     #!/usr/bin/env bash
-  #     npm install --global pnpm@12.6.0
-  #     pnpm install
-  #     pnpm test
   # Build the container image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '--build-arg', 'WEB_APP_BRANCH=$BRANCH_NAME', '--build-arg', 'VITE_API_URL=/api', '-t', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME', '.']
@@ -33,9 +15,9 @@
      - DATABASE_URL=$_DATABASE_URL
     args:
       - '-c'
-      - 'npm install -g pnpm@12.6.0 && pnpm install --frozen-lockfile && pnpm prisma migrate deploy'
+      - 'npm install -g pnpm@12.7.0 && pnpm install --frozen-lockfile && pnpm prisma migrate deploy'
   # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli:stable'
     entrypoint: gcloud
     args:
     - 'run'
