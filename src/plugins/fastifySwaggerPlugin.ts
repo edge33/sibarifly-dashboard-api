@@ -2,6 +2,7 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 import type { FastifyPluginAsync } from 'fastify';
 import fp from 'fastify-plugin';
+import packageJson from '../../package.json' with { type: 'json' };
 
 const fastifySwaggerPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifySwagger, {
@@ -9,7 +10,7 @@ const fastifySwaggerPlugin: FastifyPluginAsync = fp(async (server) => {
       info: {
         title: 'SibariFly dashboard API',
         description: 'API for SibariFly dashboard',
-        version: '0.1.0'
+        version: packageJson.version
       },
       tags: [
         {
