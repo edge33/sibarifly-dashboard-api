@@ -1,32 +1,67 @@
-  options:
-    logging: CLOUD_LOGGING_ONLY
-  steps:
-  # Build the container image
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '--build-arg', 'WEB_APP_BRANCH=$BRANCH_NAME', '--build-arg', 'VITE_API_URL=/api', '-t', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME', '.']
-  # Push the container image to Container Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME']
-  # Run database migrations
-  - name: 'node:24-slim'
+# Development trigger: every push to main, with no file filters.
+options:
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _REGION: europe-west8
+  _SERVICE: sibarifly-dashboard-develop
+steps:
+  - id: checks
+    name: node:24-slim
     entrypoint: sh
+    args:
+      - -ec
+      - |
+        npm install -g pnpm@12.7.0
+        pnpm install --frozen-lockfile
+        pnpm prisma-generate
+        pnpm lint
+        pnpm typecheck
+        pnpm test
+
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --build-arg
+      - VITE_API_URL=/api
+      - --label
+      - org.opencontainers.image.revision=$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$COMMIT_SHA-$BUILD_ID
+      - .
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: [push, 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$COMMIT_SHA-$BUILD_ID']
+
+  - id: migrate
+    name: node:24-slim
+    entrypoint: sh
+    secretEnv: [DATABASE_URL, DIRECT_URL]
+    args: [-ec, './node_modules/.bin/prisma migrate deploy']
+
+  - id: deploy-and-verify
+    name: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
+    entrypoint: bash
     env:
-     - DIRECT_URL=$_DIRECT_URL
-     - DATABASE_URL=$_DATABASE_URL
+      - IMAGE=gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$COMMIT_SHA-$BUILD_ID
+      - SERVICE=$_SERVICE
+      - REGION=$_REGION
     args:
-      - '-c'
-      - 'npm install -g pnpm@12.7.0 && pnpm install --frozen-lockfile && pnpm prisma migrate deploy'
-  # Deploy container image to Cloud Run
-  - name: 'gcr.io/google.com/cloudsdktool/google-cloud-cli:stable'
-    entrypoint: gcloud
-    args:
-    - 'run'
-    - 'deploy'
-    - 'sibarifly-dashboard-$BRANCH_NAME'
-    - '--image'
-    - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME'
-    - '--region'
-    - 'europe-west8'
-    - '--allow-unauthenticated'
-  images:
-  - 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$BRANCH_NAME'
+      - -ec
+      - |
+        digest=$(gcloud container images describe "$$IMAGE" --format='value(image_summary.digest)')
+        [[ "$$digest" =~ ^sha256:[a-f0-9]{64}$$ ]]
+        url=$(gcloud run deploy "$$SERVICE" --image="$${IMAGE%:*}@$$digest" \
+          --region="$$REGION" --allow-unauthenticated --quiet --format='value(status.url)')
+        python3 scripts/check-deployment.py "$$url"
+
+# Only successful builds expose these recorded digests to production promotion.
+images:
+  - gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$COMMIT_SHA-$BUILD_ID
+availableSecrets:
+  secretManager:
+    - versionName: projects/$PROJECT_ID/secrets/${_DATABASE_URL_SECRET}/versions/latest
+      env: DATABASE_URL
+    - versionName: projects/$PROJECT_ID/secrets/${_DIRECT_URL_SECRET}/versions/latest
+      env: DIRECT_URL
