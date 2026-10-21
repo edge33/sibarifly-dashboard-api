@@ -16,7 +16,7 @@ RUN pnpm run prisma-generate
 FROM base AS build-frontend
 ARG WEB_APP_BRANCH
 ARG VITE_API_URL
-RUN git clone --single-branch --branch ${WEB_APP_BRANCH} https://github.com/edge33/sibarifly-landing-form
+RUN git clone --depth=1 --single-branch --branch "${WEB_APP_BRANCH}" https://github.com/edge33/sibarifly-landing-form
 WORKDIR /sibarifly-landing-form
 RUN pnpm install --frozen-lockfile
 RUN pnpm run build
