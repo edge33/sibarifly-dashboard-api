@@ -120,8 +120,8 @@ the development image, since they include a different frontend branch. A retry
 can pick up newer frontend changes and replace the versioned image tag.
 
 The development pipeline runs the existing application checks before building.
-The release pipeline verifies that its stable SemVer tag matches `package.json`
-before building, pushing the versioned image, running migrations, and deploying.
+Release Please owns version consistency. The release pipeline builds and pushes
+the versioned image, runs migrations, and deploys.
 Both pipelines resolve the pushed image digest for the Cloud Run deployment.
 
 Release in increasing version order and allow one production migration/deployment

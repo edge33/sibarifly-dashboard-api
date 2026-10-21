@@ -6,12 +6,6 @@ substitutions:
   _REGION: europe-west8
   _SERVICE: sibarifly-dashboard-main
 steps:
-  - id: verify-release
-    name: node:24-slim
-    entrypoint: node
-    env: [RELEASE_TAG=$TAG_NAME]
-    args: [scripts/verify-release.mjs]
-
   - id: build
     name: gcr.io/cloud-builders/docker
     args:
