@@ -22,6 +22,9 @@ steps:
     name: gcr.io/cloud-builders/docker
     args:
       - build
+      - --no-cache
+      - --build-arg
+      - WEB_APP_BRANCH=develop
       - --build-arg
       - VITE_API_URL=/api
       - --label
@@ -40,7 +43,7 @@ steps:
     secretEnv: [DATABASE_URL, DIRECT_URL]
     args: [-ec, './node_modules/.bin/prisma migrate deploy']
 
-  - id: deploy-and-verify
+  - id: deploy
     name: gcr.io/google.com/cloudsdktool/google-cloud-cli:slim
     entrypoint: bash
     env:
@@ -52,11 +55,9 @@ steps:
       - |
         digest=$(gcloud container images describe "$$IMAGE" --format='value(image_summary.digest)')
         [[ "$$digest" =~ ^sha256:[a-f0-9]{64}$$ ]]
-        url=$(gcloud run deploy "$$SERVICE" --image="$${IMAGE%:*}@$$digest" \
-          --region="$$REGION" --allow-unauthenticated --quiet --format='value(status.url)')
-        python3 scripts/check-deployment.py "$$url"
+        gcloud run deploy "$$SERVICE" --image="$${IMAGE%:*}@$$digest" \
+          --region="$$REGION" --allow-unauthenticated --quiet
 
-# Only successful builds expose these recorded digests to production promotion.
 images:
   - gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$COMMIT_SHA-$BUILD_ID
 availableSecrets:

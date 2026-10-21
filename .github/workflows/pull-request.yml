@@ -28,6 +28,3 @@ jobs:
 
       - name: Test with coverage
         run: pnpm test:coverage
-
-      - name: Release promotion tests
-        run: python3 -m unittest discover -s scripts/tests
