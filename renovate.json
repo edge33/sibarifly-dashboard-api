@@ -1,0 +1,26 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "docker:pinDigests", "helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["npm", "dockerfile", "github-actions", "cloudbuild", "custom.regex"],
+  "semanticCommits": "enabled",
+  "automerge": false,
+  "cloudbuild": {
+    "managerFilePatterns": ["/(^|/)cloudbuild(?:\\.[^/]+)?\\.ya?ml$/"]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update pnpm installed in Docker and Cloud Build alongside packageManager",
+      "managerFilePatterns": ["/(^|/)Dockerfile$/", "/(^|/)cloudbuild(?:\\.[^/]+)?\\.ya?ml$/"],
+      "matchStrings": ["npm install -g pnpm@(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "pnpm",
+      "datasourceTemplate": "npm"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["pnpm"],
+      "groupName": "pnpm"
+    }
+  ]
+}
