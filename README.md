@@ -31,6 +31,20 @@ pnpm typecheck
 pnpm test
 ```
 
+## Dependency updates
+
+Renovate is configured in `renovate.json` to update pnpm dependencies and the
+lockfile, Dockerfile base images, GitHub Actions, and build-step images in both
+`cloudbuild.yaml` and `cloudbuild.production.yaml`. The pnpm version in
+`package.json` and the install commands in Docker and Cloud Build are grouped in
+one PR. Docker images and GitHub Actions are pinned to digests, with subsequent
+digest updates proposed by Renovate. Updates require review; automerge is disabled.
+
+Install the [Renovate GitHub App](https://github.com/apps/renovate) and grant it
+access to this repository, then merge this configuration into `main`. The hosted
+app runs Renovate; no additional workflow or repository token is needed. Use the
+Dependency Dashboard issue to review pending updates and configuration warnings.
+
 ## Releases and deployments
 
 Every merge to `main` deploys to development. Release Please maintains a release
