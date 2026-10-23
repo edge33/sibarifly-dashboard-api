@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!generated", "!dist", "!static"]
+    "includes": ["**", "!generated", "!dist", "!static", "!CHANGELOG.md", "pnpm-lock.yaml"]
   },
   "formatter": {
     "indentStyle": "space",
