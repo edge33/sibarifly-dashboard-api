@@ -1,9 +1,6 @@
 import assert from 'node:assert/strict';
 import { afterEach, beforeEach, describe, it, mock } from 'node:test';
-import { config as loadEnv } from 'dotenv';
 import type { FastifyInstance } from 'fastify';
-
-loadEnv({ path: '.env.test' });
 
 mock.module('../plugins/prismaPlugin.ts', {
   exports: { default: async () => {} }
