@@ -9,7 +9,6 @@ A simple boilerplate to bootstrap a fastify app
 built with [pnpm](https://pnpm.io/)
 
 it features
-
 - Typescript
 - Biome
 - Editorconfig
@@ -82,15 +81,15 @@ connection, two triggers, Secret Manager entries, and IAM in Google Cloud. Disab
 old branch-based production triggers when switching, so ordinary merges cannot
 deploy to production. Configure both triggers before releasing.
 
-| Setting | Development | Production |
-| --- | --- | --- |
-| Event | Push to branch `^main$` | Push to tag `^v[0-9]+\.[0-9]+\.[0-9]+$` |
-| Build configuration | `cloudbuild.yaml` | `cloudbuild.production.yaml` |
-| File filters | None: every merge deploys | None |
-| `_SERVICE` default | `sibarifly-dashboard-develop` | `sibarifly-dashboard-main` |
-| `_REGION` default | `europe-west8` | `europe-west8` |
-| `_DATABASE_URL_SECRET` | Development database URL secret name | Production database URL secret name |
-| `_DIRECT_URL_SECRET` | Development direct URL secret name | Production direct URL secret name |
+| Setting                | Development                          | Production                              |
+| ---------------------- | ------------------------------------ | --------------------------------------- |
+| Event                  | Push to branch `^main$`              | Push to tag `^v[0-9]+\.[0-9]+\.[0-9]+$` |
+| Build configuration    | `cloudbuild.yaml`                    | `cloudbuild.production.yaml`            |
+| File filters           | None: every merge deploys            | None                                    |
+| `_SERVICE` default     | `sibarifly-dashboard-develop`        | `sibarifly-dashboard-main`              |
+| `_REGION` default      | `europe-west8`                       | `europe-west8`                          |
+| `_DATABASE_URL_SECRET` | Development database URL secret name | Production database URL secret name     |
+| `_DIRECT_URL_SECRET`   | Development direct URL secret name   | Production direct URL secret name       |
 
 Set `_SERVICE` to your existing Cloud Run service names if different. Existing
 Cloud Run runtime environment variables and service identities must already be
@@ -117,10 +116,10 @@ not require a manually dispatched GitHub Actions workflow.
 
 ### Images and frontend branches
 
-| API build | Frontend branch | Image tag |
-| --- | --- | --- |
-| Push to `main` | Latest `develop` | `<commit SHA>-<build ID>` |
-| Release tag, e.g. `v1.2.3` | Latest `main` | `v1.2.3` |
+| API build                  | Frontend branch  | Image tag                 |
+| -------------------------- | ---------------- | ------------------------- |
+| Push to `main`             | Latest `develop` | `<commit SHA>-<build ID>` |
+| Release tag, e.g. `v1.2.3` | Latest `main`    | `v1.2.3`                  |
 
 For example, a release publishes
 `gcr.io/<project>/github.com/edge33/sibarifly-dashboard:v1.2.3`.
