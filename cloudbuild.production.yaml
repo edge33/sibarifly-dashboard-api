@@ -28,7 +28,7 @@ steps:
     args: [push, 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$TAG_NAME']
 
   - id: migrate
-    name: node:24-slim
+    name: node:24.22.1-slim
     entrypoint: sh
     secretEnv: [DATABASE_URL, DIRECT_URL]
     args:

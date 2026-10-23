@@ -6,7 +6,7 @@ substitutions:
   _SERVICE: sibarifly-dashboard-develop
 steps:
   - id: checks
-    name: node:24-slim
+    name: node:24.22.1-slim
     entrypoint: sh
     args:
       - -ec
@@ -38,7 +38,7 @@ steps:
     args: [push, 'gcr.io/$PROJECT_ID/github.com/edge33/sibarifly-dashboard:$COMMIT_SHA-$BUILD_ID']
 
   - id: migrate
-    name: node:24-slim
+    name: node:24.22.1-slim
     entrypoint: sh
     secretEnv: [DATABASE_URL, DIRECT_URL]
     args: [-ec, './node_modules/.bin/prisma migrate deploy']
