@@ -46,7 +46,7 @@ Dependency Dashboard issue to review pending updates and configuration warnings.
 
 ## Releases and deployments
 
-Every merge to `main` deploys to development. Release Please maintains a release
+Every merge to `main` starts a development build. Release Please maintains a release
 PR containing the next version and changelog. Merge that PR when ready to release;
 it creates a stable `vMAJOR.MINOR.PATCH` tag and GitHub release. Cloud Build then
 builds the release image using the latest frontend `main`, runs production migrations,
@@ -136,6 +136,26 @@ The development pipeline runs the existing application checks before building.
 Release Please owns version consistency. The release pipeline builds and pushes
 the versioned image, runs migrations, and deploys.
 Both pipelines resolve the pushed image digest for the Cloud Run deployment.
+
+Both pipelines check Cloud Build history before migrations and immediately before
+Cloud Run deployment. If a newer build exists for the same trigger, the older
+build skips migrations and deployment, finishes successfully, and keeps its image.
+Queued, failed, and cancelled newer builds also supersede older builds; retry the
+latest revision to recover. Development and production triggers are independent:
+ordinary commits to `main` do not supersede a production release, but a newer
+release build does. Manual builds without a trigger ID fail the freshness check.
+The build region comes from Cloud Build's `$LOCATION`, independently of `_REGION`.
+
+Both build service accounts need `cloudbuild.builds.get` and
+`cloudbuild.builds.list`, for example through `roles/cloudbuild.builds.viewer`.
+A history lookup error fails the build rather than allowing deployment. This
+checks builds already registered with Cloud Build, not commits whose trigger
+has not arrived yet. A build arriving after the final check cannot stop an
+already-started migration or Cloud Run deployment. Continue to serialize
+production migrations and deployments as described below.
+
+Run the deployment guard tests locally with
+`python3 -m unittest discover -s scripts -p 'test_*.py'`.
 
 Release in increasing version order and allow one production migration/deployment
 at a time. Prisma migrations must support the application still running during
