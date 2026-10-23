@@ -20,8 +20,7 @@ declare module 'fastify' {
 
 const fastifyEnvPlugin: FastifyPluginAsync = fp(async (server) => {
   server.register(fastifyEnv, {
-    schema: envSchema,
-    dotenv: { path: `./.env.${process.env.ENVIRONMENT}` }
+    schema: envSchema
   });
 });
 
