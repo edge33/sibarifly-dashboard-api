@@ -34,7 +34,7 @@ steps:
     args:
       - -ec
       - |
-        npm install -g pnpm@12.15.0
+        npm install -g pnpm@12.16.1
         pnpm install --frozen-lockfile
         pnpm prisma migrate deploy
 
